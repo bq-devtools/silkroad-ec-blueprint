@@ -20,13 +20,18 @@ This enpoint allow to create product info.
 
 + Request (application/json)
 
-         {
-            "price": 1,
-            "currency" : "eur",
-            "tax" : 20,
-            "ref" : "resource uri"
-            "type" : "Song"
-         }
+    + Headers
+
+            Authorization : Bearer {token}                  
+
+    + Body                                 
+
+            {
+                "price": 1,
+                "currency" : "eur",
+                "ref" : "resource uri"
+                "type" : "FromApiary"
+            }
         
 + Response 201 (text/plain)
 
@@ -52,14 +57,19 @@ This enpoint allow to read, update and delete product info.
 
 + Response 200 (application/json)
 
-        {
-            "id": {id},
-            "price": 1,
-            "currency" : "eur",
-            "tax" : 20,
-            "ref" : "resource uri"
-            "type" : "Song"
-        }
+    + Headers
+
+            Authorization : Bearer {token}                  
+
+    + Body                                 
+
+            {
+                "id": {id},
+                "price": 1,
+                "currency" : "eur",
+                "ref" : "resource uri"
+                "type" : "Song"
+            }
 
 ### Update Product [PUT]
 
@@ -69,10 +79,10 @@ This enpoint allow to read, update and delete product info.
 |404   |not_found|When product not exist.|
 |422   |invalid_entity|JSON doesn't correspond to Product or is empty|
  
- + Request (application/json)
-    + Header
-    
-            Accept: application/json
++ Request (application/json)
+    + Headers
+
+            Authorization : Bearer {token}                  
 
     + Body
     
@@ -87,6 +97,11 @@ This enpoint allow to read, update and delete product info.
 
 
 ### Remove a Product [DELETE]
++ Request
+    + Headers
+
+            Authorization : Bearer {token}     
+
 + Response 204
 
 
@@ -101,8 +116,13 @@ API for start and administrate user orders
 |400|bad_request|Order request bad formed|
 |403  |fobidden|If the access_token is not associated with any user|
 + Request (application/json)
+    + Headers
 
-        { "productIds": ["productId1"] }
+            Authorization : Bearer {token}                  
+
+    + Body
+    
+            { "productIds": ["productId1"] }
 
 + Response 201
     + Headers
@@ -121,6 +141,12 @@ A single Order object
 |------|-----|-----------|
 |404  |not_found|Order not found|
 |403  |fobidden|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}    
+            
 + Response 200 (application/json)
 
         {"id": 1, "productIds":["productId1", "productId2"], "username":"username"}
@@ -133,7 +159,12 @@ A single Order object
 |404  |not_found|Order not found|
 |403  |fobidden|If the access_token is not associated with any user|
 + Request (application/json)
+    + Headers
 
-        {"productIds":["productId1", "productId3"]}
+            Authorization : Bearer {token}                  
+
+    + Body
+    
+            {"productIds":["productId1", "productId3"]}
     
 + Response 204
