@@ -87,7 +87,6 @@ This enpoint allow to read, update and delete product info.
     + Body
     
             {
-                "id": {productIDParameter},
                 "price": 2,
                 "currency" : "dol",
                 "href" : "2 resource uri"
@@ -167,6 +166,16 @@ A single Order object
 
     + Body
     
-            {"productIds":["productId1", "productId3"]}
+            {"productIds": ["productId1", "productId3"]}
     
 + Response 204
+
+### Remove a Order [DELETE]
++ Request
+    + Headers
+
+            Authorization : Bearer {token}     
+
++ Response 204
+
+
