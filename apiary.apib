@@ -1,0 +1,136 @@
+FORMAT: 1A
+HOST: https://ec.int.bqws.io/v1.0/
+
+# EC (v1.0)
+EC is an electronic commerce service.
+
+# Group Product
+
+## Create [/product]
+
+This enpoint allow to create product info. 
+
+
+### Create new product [POST]
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|422   |invalid_entity|JSON doesn't correspond to Product or is empty|
+
++ Request (application/json)
+
+         {
+            "price": 1,
+            "currency" : "eur",
+            "tax" : 20,
+            "ref" : "resource uri"
+            "type" : "Song"
+         }
+        
++ Response 201 (text/plain)
+
+        product/{id}
+       
+
+## Read, update and delete [/product/{id}]
+
+This enpoint allow to read, update and delete product info. 
+
++ Parameters
+    + id (required, number, `324231`) ... Numeric `id` of the product to perform action with. Has example value.
+    
+
+### Get Product [GET]
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|404   |not_found|When product not exist.|
+
+ 
+
++ Response 200 (application/json)
+
+        {
+            "id": {id},
+            "price": 1,
+            "currency" : "eur",
+            "tax" : 20,
+            "ref" : "resource uri"
+            "type" : "Song"
+        }
+
+### Update Product [PUT]
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|404   |not_found|When product not exist.|
+|422   |invalid_entity|JSON doesn't correspond to Product or is empty|
+ 
+ + Request (application/json)
+    + Header
+    
+            Accept: application/json
+
+    + Body
+    
+            {
+            "price": 2,
+            "tax" : 20,
+            "type" : "Song"
+            }
+        
++ Response 204 
+
+
+
+### Remove a Product [DELETE]
++ Response 204
+
+
+# Group Order
+API for start and administrate user orders
+
+## Order Collection [/order]
+### Create a new Order [POST]
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400|bad_request|Order request bad formed|
++ Request (application/json)
+
+        { "productIds": ["productId1"] }
+
++ Response 201
+    + Headers
+    
+            Location: http://ec.int.bqreaders.com/v1.0/order/{newId}
+
+## Order [/order/{id}]
+A single Order object
+
++ Parameters
+    + id (required, string, `Id1`) ... String `id` of the Order to perform action with. Has example value.
+
+### Retrieve a Order [GET]
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|404  |not_found|Order not found|
++ Response 200 (application/json)
+
+        {"id": 1, "productIds":["productId1", "productId2"], "username":"username"}
+
+### Update a Order [PUT]
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|400|bad_request|Order request bad formed|
+|404  |not_found|Order not found|
++ Request (application/json)
+
+        {"productIds":["productId1", "productId3"]}
+    
++ Response 204
