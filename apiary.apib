@@ -99,6 +99,7 @@ API for start and administrate user orders
 |Status|Error|Description|
 |------|-----|-----------|
 |400|bad_request|Order request bad formed|
+|403  |fobidden|If the access_token is not associated with any user|
 + Request (application/json)
 
         { "productIds": ["productId1"] }
@@ -119,6 +120,7 @@ A single Order object
 |Status|Error|Description|
 |------|-----|-----------|
 |404  |not_found|Order not found|
+|403  |fobidden|If the access_token is not associated with any user|
 + Response 200 (application/json)
 
         {"id": 1, "productIds":["productId1", "productId2"], "username":"username"}
@@ -129,6 +131,7 @@ A single Order object
 |------|-----|-----------|
 |400|bad_request|Order request bad formed|
 |404  |not_found|Order not found|
+|403  |fobidden|If the access_token is not associated with any user|
 + Request (application/json)
 
         {"productIds":["productId1", "productId3"]}
