@@ -1,12 +1,12 @@
 FORMAT: 1A
-HOST: https://ec.int.bqws.io/v1.0/
+HOST: https://ec.int.bqws.io/
 
 # EC (v1.0)
 EC is an electronic commerce service.
 
 # Group Product
 
-## Create [/product]
+## Create [/v1.0/product]
 
 This enpoint allow to create product info. 
 
@@ -33,17 +33,15 @@ This enpoint allow to create product info.
                 "type" : "FromApiary"
             }
         
-+ Response 201 (text/plain)
-
-        product/{id}
++ Response 201
        
 
-## Read, update and delete [/product/{id}]
+## Read, update and delete [/v1.0/product/{productIDParameter}]
 
 This enpoint allow to read, update and delete product info. 
 
 + Parameters
-    + id (required, number, `324231`) ... Numeric `id` of the product to perform action with. Has example value.
+    + productIDParameter (required, number, `324231`) ... Numeric `id` of the product to perform action with. Has example value.
     
 
 ### Get Product [GET]
@@ -64,7 +62,7 @@ This enpoint allow to read, update and delete product info.
     + Body                                 
 
             {
-                "id": {id},
+                "id": {productIDParameter},
                 "price": 1,
                 "currency" : "eur",
                 "ref" : "resource uri"
@@ -87,9 +85,11 @@ This enpoint allow to read, update and delete product info.
     + Body
     
             {
-            "price": 2,
-            "tax" : 20,
-            "type" : "Song"
+                "id": {productIDParameter},
+                "price": 1,
+                "currency" : "eur",
+                "ref" : "resource uri"
+                "type" : "Song"
             }
         
 + Response 204 
@@ -108,7 +108,7 @@ This enpoint allow to read, update and delete product info.
 # Group Order
 API for start and administrate user orders
 
-## Order Collection [/order]
+## Create [/v1.0/order]
 ### Create a new Order [POST]
 ###Errors###
 |Status|Error|Description|
@@ -129,11 +129,11 @@ API for start and administrate user orders
     
             Location: http://ec.int.bqreaders.com/v1.0/order/{newId}
 
-## Order [/order/{id}]
+## Read, update and delete [/v1.0/order/{orderIDParameter}]
 A single Order object
 
 + Parameters
-    + id (required, string, `Id1`) ... String `id` of the Order to perform action with. Has example value.
+    + orderIDParameter (required, string, `Id1`) ... String `id` of the Order to perform action with. Has example value.
 
 ### Retrieve a Order [GET]
 ###Errors###
@@ -149,7 +149,7 @@ A single Order object
             
 + Response 200 (application/json)
 
-        {"id": 1, "productIds":["productId1", "productId2"], "username":"username"}
+        {"id": {orderIDParameter}, "productIds":["productId1", "productId2"], "username":"username"}
 
 ### Update a Order [PUT]
 ###Errors###
@@ -158,6 +158,7 @@ A single Order object
 |400|bad_request|Order request bad formed|
 |404  |not_found|Order not found|
 |403  |fobidden|If the access_token is not associated with any user|
+
 + Request (application/json)
     + Headers
 
