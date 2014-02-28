@@ -12,6 +12,7 @@ This enpoint allow to create product info.
 
 
 ### Create new product [POST]
+Header response Location: http://ec.int.bqreaders.com/v1.0/product/{newId}
 
 ###Errors###
 |Status|Error|Description|
@@ -29,7 +30,7 @@ This enpoint allow to create product info.
             {
                 "price": 1,
                 "currency" : "eur",
-                "ref" : "resource uri"
+                "ref" : "resource uri",
                 "type" : "FromApiary"
             }
         
@@ -111,6 +112,8 @@ API for start and administrate user orders
 
 ## Create [/v1.0/order]
 ### Create a new Order [POST]
+Header response Location: http://ec.int.bqreaders.com/v1.0/order/{newId}
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
@@ -126,9 +129,7 @@ API for start and administrate user orders
             { "productIds": ["productId1"] }
 
 + Response 201
-    + Headers
-    
-            Location: http://ec.int.bqreaders.com/v1.0/order/{newId}
+            
 
 ## Read update and delete [/v1.0/order/{orderIDParameter}]
 A single Order object
