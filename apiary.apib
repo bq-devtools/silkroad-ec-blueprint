@@ -30,7 +30,7 @@ Header response Location: http://ec.int.bqreaders.com/v1.0/product/{newId}
             {
                 "price": 1,
                 "currency" : "eur",
-                "ref" : "resource uri",
+                "href" : "resource uri",
                 "type" : "FromApiary"
             }
         
@@ -64,10 +64,10 @@ This enpoint allow to read, update and delete product info.
     + Body                                 
 
             {
-                "id": {productIDParameter},
+                "id": "{productIDParameter}",
                 "price": 1,
                 "currency" : "eur",
-                "ref" : "resource uri"
+                "href" : "resource uri"
                 "type" : "Song"
             }
 
@@ -151,7 +151,7 @@ A single Order object
             
 + Response 200 (application/json)
 
-        {"id": {orderIDParameter}, "productIds":["productId1", "productId2"], "username":"username"}
+        {"id": "{orderIDParameter}", "productIds":["productId1"]}
 
 ### Update a Order [PUT]
 ###Errors###
