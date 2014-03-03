@@ -37,12 +37,12 @@ Header response Location: http://ec.int.bqreaders.com/v1.0/product/{newId}
 + Response 201
        
 
-## Read update and delete [/v1.0/product/{productIDParameter}]
+## Read update and delete [/v1.0/product/{id}]
 
 This enpoint allow to read, update and delete product info. 
 
 + Parameters
-    + productIDParameter (required, number, `324231`) ... Numeric `id` of the product to perform action with. Has example value.
+    + id (required, string, `324231`) ... Numeric `id` of the product to perform action with. Has example value.
     
 
 ### Get Product [GET]
@@ -130,11 +130,11 @@ Header response Location: http://ec.int.bqreaders.com/v1.0/order/{newId}
 + Response 201
             
 
-## Read update and delete [/v1.0/order/{orderIDParameter}]
+## Read update and delete [/v1.0/order/{id}]
 A single Order object
 
 + Parameters
-    + orderIDParameter (required, string, `Id1`) ... String `id` of the Order to perform action with. Has example value.
+    + id (required, string, `Id1`) ... String `id` of the Order to perform action with. Has example value.
 
 ### Retrieve a Order [GET]
 ###Errors###
