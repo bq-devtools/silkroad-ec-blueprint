@@ -175,4 +175,32 @@ A single Order object
 
 + Response 204
 
+# Group Purchase
+API for view user purchase history
+
+## Get purchases for the logged user [/v1.0/purchase]
+Get purchases paginated
+
+### Retrieve the purchases [GET]
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|403  |fobidden|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}    
+            
++ Response 200 (application/json)
+
+        [{"id": "purchase1"}, {"id": "purchase2"}]
+
 
