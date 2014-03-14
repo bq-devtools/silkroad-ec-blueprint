@@ -231,4 +231,96 @@ Get purchases paginated
 
         [{"id": "purchase1"}, {"id": "purchase2"}]
 
+# Group Payment Method
+Add, get and delete payment methods.
+
+## Payment methods [/v0.1/paymentmethod]
+Add a payment method for the logged user an get his collections.
+
+### Get payment methods [GET]
+Get the payment method registered for a user.
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|403  |fobidden|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}   
+
++ Response 200 (application/json)
+
+        [
+        {
+            "id":"paymentMethodId1", 
+            "userId":"userId", 
+            "type":"BANK_CARD", 
+            "name", "myCard", 
+            "reference":"123123123123", 
+            "holderName":"Pepito Gimenez", 
+            "cardNumber":"1213", 
+            "credit":null,
+            "onService":false
+        },
+        {
+            "id":"paymentMethodId2", 
+            "userId":"userId", 
+            "type":"GIFT_CARD", 
+            "name":"myGiftCard",
+            "reference":"333442211", 
+            "holderName":"Pepito Gimenez", 
+            "cardNumber":null, 
+            "credit":{"currency":"EUR", "amount":10},
+            "onService":false
+        },
+        ... 
+        ]
+
+### Add payment method [POST]
+Add a new payment method for the logged user
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|403  |fobidden|If the access_token is not associated with any user|
+|403  |adyen_connection_refused|Adyen refuse the new payment method|
+|500  |adyen_connection_error|Error when connecting with adyen|
+
++ Request (application/json)
+    + Headers
+
+            Authorization : Bearer {token}  
+    
+    + Body
+    
+            {
+                "data":"qawpdqjwdioqnfafb201u20rh4f9bq94fq3bf", 
+                "name":"myCard", 
+                "remember":true
+            }
+
++ Response 201
+
+## Payment methods [/v0.1/paymentmethod/{id}]
+### Delete payment method [DELETE]
+Delete payment method of the logged user
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|403  |fobidden|If the access_token is not associated with any user|
+|423  |payment_method_blocked|When payment method is on service with a subscription or in  purchase in progress|
+|500  |adyen_connection_error|Error when connecting with adyen|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}  
+    
+
++ Response 204
+
+
 
