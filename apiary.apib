@@ -303,7 +303,35 @@ Add a new payment method for the logged user
 
 + Response 201
 
-## Payment methods [/v1.0/paymentmethod/{id}]
+## Payment method [/v1.0/paymentmethod/{id}]
+### Get a single payment method [GET]
+Get details of a single payment method by its id
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|404  |not_found|Payment method not found|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}  
+    
+
++ Response 200 (application/json)
+
+        {
+            "id":"paymentMethodId1", 
+            "userId":"userId", 
+            "type":"BANK_CARD", 
+            "name", "myCard", 
+            "reference":"123123123123", 
+            "holderName":"Pepito Gimenez", 
+            "cardNumber":"1213", 
+            "credit":null,
+            "onService":false
+        }
+
 ### Delete payment method [DELETE]
 Delete payment method of the logged user
 
