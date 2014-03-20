@@ -175,8 +175,26 @@ A single Order object
 
 + Response 204
 
+## Prepare order [/v1.0/order/{id}/prepare]
+Checks if an order has all its prices up to date. Returns the order state: PREPARED or UPDATED.
+
+### Prepare order [POST]
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|404  |not_found|Order not found|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}                
+    
++ Response 200 (application/json)
+
+        {state:"PREPARED | UPDATED"}
+
 ## Checkout order [/v1.0/order/{id}/checkout]
-Checkout a order and generate a purchase asyncronously. Returns in Location header a link to the new purchase.
+Checkout an order and generate a purchase asyncronously. Returns in Location header a link to the new purchase.
 
 ### Checkout order [POST]
 ###Errors###
@@ -185,6 +203,7 @@ Checkout a order and generate a purchase asyncronously. Returns in Location head
 |400|bad_request|Not payment methods selected|
 |404  |not_found|Order not found|
 |403  |fobidden|If the access_token is not associated with any user|
+|423  |precondition_failed|If the order state is not PREPARED|
 
 + Request (application/json)
     + Headers
@@ -194,7 +213,7 @@ Checkout a order and generate a purchase asyncronously. Returns in Location head
     + Body
     
             {
-            "paymentMethodsIds": ["banckPaymentMethod1", "banckPaymentMethod2", "giftPaymentMethod"],
+            "paymentMethodsIds": ["bankPaymentMethod1", "bankPaymentMethod2", "giftPaymentMethod"],
             "discountIds": ["discount1", "discount2"]
             }
     
