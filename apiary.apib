@@ -108,7 +108,7 @@ API for start and administrate user order. Exists one order foreach user.
             
 
 ## Read update and delete [/v1.0/order/{id}]
-A single Order object
+A single Order object. Each user's order id is the same that the user's id. It is not necessary to create the order, it will be done the first time it is updated
 
 
 ### Retrieve a Order [GET]
@@ -142,7 +142,7 @@ A single Order object
 
     + Body
     
-            {"items": [{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}, {"productId":"productId2", "amount" : 2, "price": {"amount":20, "currency":"GBP"}}]}
+            {"state":"PREPARED|UPDATED", "items": [{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}, {"productId":"productId2", "amount" : 2, "price": {"amount":20, "currency":"EUR"}}]}
     
 + Response 204
 
@@ -156,7 +156,7 @@ A single Order object
 + Response 204
 
 ## Prepare order [/v1.0/order/{id}/prepare]
-Checks if an order has all its prices up to date. Returns the order state: PREPARED or UPDATED.
+Checks if an order has all its prices up to date, otherwise, updates the order. Returns the order.
 
 ### Prepare order [POST]
 ###Errors###
@@ -171,7 +171,7 @@ Checks if an order has all its prices up to date. Returns the order state: PREPA
     
 + Response 200 (application/json)
 
-        {state:"PREPARED | UPDATED"}
+        {"state":"PREPARED|UPDATED", "items": [{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}, {"productId":"productId2", "amount" : 2, "price": {"amount":20, "currency":"EUR"}}]}
 
 ## Checkout order [/v1.0/order/{id}/checkout]
 Checkout an order and generate a purchase asyncronously. Returns in Location header a link to the new purchase.
