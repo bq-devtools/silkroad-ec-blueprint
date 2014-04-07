@@ -161,7 +161,7 @@ Checks if an order has all its prices up to date, otherwise, updates the order. 
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|404  |not_found|Order not found|
+|404  |not_found|Order is empty|
 
 + Request
     + Headers
@@ -180,7 +180,7 @@ Checkout an order and generate a purchase asyncronously. Returns in Location hea
 |Status|Error|Description|
 |------|-----|-----------|
 |400|bad_request|Not payment methods selected|
-|404  |not_found|Order not found|
+|404  |not_found|Order is empty|
 |403  |fobidden|If the access_token is not associated with any user|
 |423  |precondition_failed|If the order state is not PREPARED|
 
