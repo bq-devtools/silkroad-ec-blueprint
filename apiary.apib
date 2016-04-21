@@ -14,10 +14,28 @@ This enpoint allow to create product info.
 ### Create new product [POST]
 Header response Location: http://ec.int.bqreaders.com/v1.0/product/{newId}
 
+###Request Fields###
+|Name|Description|Type|Required|
+|------|-----|-----------|:--:|
+|name|The name of the product|String|*|
+|price|Price of the pruduct|Object|*|
+|price.currency|Currency code for the price (ISO code)|String|*|
+|price.amount|The amount of the price|Float|*|
+|type|Define the type of the product, wich can trigger diferent behaviors, for example, recurring-lisence. (UNDER DEFINITION)|String||
+|href|The resource uri|String||
+|assets|Array with the permisions assigned to the product|Array||
+|assets.name|Identifier of the asset|String||
+|assets.period|Define if the product asset has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|assets.scopes|String array with the scopes associated with the asset|Array||
+|paymentPlan|Array with the service associated to the product|Array||
+|paymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|paymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
 |422   |invalid_entity|JSON doesn't correspond to Product or is empty|
+|401   |unauthorized|If the user crendentials or client credentials can not be authorized.
 
 + Request (application/json)
 
@@ -28,14 +46,90 @@ Header response Location: http://ec.int.bqreaders.com/v1.0/product/{newId}
     + Body                                 
 
             {
-                "price": 1,
-                "currency" : "eur",
-                "href" : "resource uri",
-                "type" : "FromApiary"
+                "id": "{productIDParameter}",
+                "price": {"amount":2.30, "currency":"EUR"},
+                "href": "resource uri",
+                "type": "FromApiary",
+                "name": "ApiaryProduct"
+                "assets": [
+                    {
+                        "scopes": {"music:streaming"},
+                        "period": "P1y2m3d",
+                        "name": "MyAsset"
+                    }
+                ],
+                "paymentPlan": {
+                        "duration": "P1y",
+                        "period": "P1m"
+                }
             }
         
 + Response 201
-       
+
+### Get Products [GET]
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+
+###Response Fields###
+|Name|Description|Type|
+|------|-----|-----------|
+|id|Identifier of the product|String|
+|name|The name of the product|String|
+|price|Price of the pruduct|Object|
+|price.currency|Currency code for the price (ISO code)|String|
+|price.amount|The amount of the price|Float|
+|type|Define the type of the product, wich can trigger diferent behaviors, for example, recurring-lisence. (UNDER DEFINITION)|String|
+|href|The resource uri|String|
+|assets|Array with the permisions assigned to the product|Array|
+|assets.name|Identifier of the asset|String|
+|assets.period|Define if the product asset has a validity in ISO8601 period format (e.g. P1y2m3d)|String|
+|assets.scopes|String array with the scopes associated with the asset|Array|
+|paymentPlan|Array with the service associated to the product|Array||
+|paymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|paymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401   |unauthorized|If the user crendentials or client credentials can not be authorized.
+ 
+ 
++ Request
+
+    + Headers
+
+            Authorization : Bearer {token}                  
+        
++ Response 200 (application/json)
+
+    + Body                                 
+
+            [{
+                "id": "{productIDParameter}",
+                "price": {"amount":20, "currency":"EUR"},
+                "href": "resource uri",
+                "type": "FromApiary",
+                "name": "ApiaryProduct"
+                "assets": [
+                    {
+                        "scopes": {"music:streaming"},
+                        "period": "P1y2m3d",
+                        "name": "MyAsset"
+                    }
+                ],
+                "paymentPlan": {
+                        "duration": "P1y",
+                        "period": "P1m"
+                }
+            }]
+
 
 ## Read update and delete [/v1.0/product/{id}]
 
@@ -44,11 +138,30 @@ This enpoint allow to read, update and delete product info.
 
 ### Get Product [GET]
 
+###Response Fields###
+|Name|Description|Type|
+|------|-----|-----------|
+|id|Identifier of the product|String|
+|name|The name of the product|String|
+|price|Price of the pruduct|Object|
+|price.currency|Currency code for the price (ISO code)|String|
+|price.amount|The amount of the price|Float|
+|type|Define the type of the product, wich can trigger diferent behaviors, for example, recurring-lisence. (UNDER DEFINITION)|String|
+|href|The resource uri|String|
+|assets|Array with the permisions assigned to the product|Array|
+|assets.name|Identifier of the asset|String|
+|assets.period|Define if the product asset has a validity in ISO8601 period format (e.g. P1y2m3d)|String|
+|assets.scopes|String array with the scopes associated with the asset|Array|
+|paymentPlan|Array with the service associated to the product|Array||
+|paymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|paymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+
+            
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
 |404   |not_found|When product not exist.|
-
+|401   |unauthorized|If the user crendentials or client credentials can not be authorized.
  
 + Request
 
@@ -62,19 +175,51 @@ This enpoint allow to read, update and delete product info.
 
             {
                 "id": "{productIDParameter}",
-                "price": 1,
-                "currency": "eur",
+                "price": {"amount":20, "currency":"EUR"},
                 "href": "resource uri",
-                "type": "FromApiary"
+                "type": "FromApiary",
+                "name": "ApiaryProduct"
+                "assets": [
+                    {
+                        "scopes": {"music:streaming"},
+                        "period": "P1y2m3d",
+                        "name": "MyAsset"
+                    }
+                ],
+                "paymentPlan": {
+                        "duration": "P1y",
+                        "period": "P1m"
+                }
             }
 
 ### Update Product [PUT]
+Not partial update. Send the complete product.
+
+###Request Fields###
+|Name|Description|Type|Required|
+|------|-----|-----------|:--:|
+|name|The name of the product|String|*|
+|price|Price of the pruduct|Object|*|
+|price.currency|Currency code for the price (ISO code)|String|*|
+|price.amount|The amount of the price|Float|*|
+|type|Define the type of the product, wich can trigger diferent behaviors, for example, recurring-lisence. (UNDER DEFINITION)|String||
+|href|The resource uri|String||
+|assets|Array with the permisions assigned to the product|Array||
+|assets.name|Identifier of the asset|String||
+|assets.period|Define if the product asset has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|assets.scopes|String array with the scopes associated with the asset|Array||
+|paymentPlan|Object with the service associated to the product|Object||
+|paymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|paymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+
+
 
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
 |404   |not_found|When product not exist.|
 |422   |invalid_entity|JSON doesn't correspond to Product or is empty|
+|401   |unauthorized|If the user crendentials or client credentials can not be authorized.
  
 + Request (application/json)
     + Headers
@@ -84,9 +229,22 @@ This enpoint allow to read, update and delete product info.
     + Body
     
             {
-                "price": 2,
-                "currency" : "dol",
-                "href" : "2 resource uri"
+                "id": "{productIDParameter}",
+                "price": {"amount":2.30, "currency":"EUR"},
+                "href": "resource uri",
+                "type": "FromApiary",
+                "name": "ApiaryProduct"
+                "assets": [
+                    {
+                        "scopes": {"music:streaming"},
+                        "period": "P1y2m3d",
+                        "name": "MyAsset"
+                    }
+                ],
+                "paymentPlan": {
+                        "duration": "P1y",
+                        "period": "P1m"
+                }
             }
         
 + Response 204 
@@ -97,8 +255,7 @@ This enpoint allow to read, update and delete product info.
 + Request
     + Headers
 
-            Authorization: Bearer {token}   
-            Content-Length: 0
+            Authorization: Bearer {token}
 
 + Response 204
 
@@ -112,11 +269,35 @@ A single Order object. Each user's order id is the same that the user's id. It i
 
 
 ### Retrieve a Order [GET]
+
+###Response Fields###
+|Name|Description|Type|
+|------|-----|-----------|
+|id|Identifier of the order (the same as the userId)|String|
+|items|Array of products to purchase|Array|
+|items.productId|Product related with the item|String|
+|items.productName|Product name related with the item|String|
+|items.quantity|number of products|Integer|
+|items.price|Price of the pruduct during the purchase|Object|
+|items.price.currency|Currency code for the price (ISO code)|String|
+|items.price.amount|The amount of the price|Float|
+|state|String code of the state (OPEN, PREPARED)|String|
+|items.productPaymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.productPaymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+
+
+The states of the order are:
+
+|State|Description|
+|----|-----------|
+|OPEN|The order items are open to change and its prices can change.|
+|PREPARED|The order is prepared to checkout. The prices of the items are fixed. The order can be checked out for 300 seconds after being prepared (it can be changed on server configuration property "ec.order.maxTimeToCheckoutAfterPrepare"). If you try to checkout the order after that timeout, the checkout will fail and the order status will change to OPEN.|
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
 |404  |not_found|Order not found|
-|403  |fobidden|If the access_token is not associated with any user|
+|401  |unauthorized|If the access_token is not associated with any user|
 
 + Request
     + Headers
@@ -125,14 +306,28 @@ A single Order object. Each user's order id is the same that the user's id. It i
             
 + Response 200 (application/json)
 
-        {"id": "{orderIDParameter}", "items":[{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}]}
+        {"id": "{orderIDParameter}", "state":"PREPARED|OPEN", "items":[{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"} , {"productId":"productId3", "amount" : 1, "price": {"amount":10, "currency":"EUR"} ,"productPaymentPlan": {"duration":"P1Y","period":"P1M","upgradeable":"false"}}]}
 
 ### Update a Order [PUT]
+
+###Request Fields###
+|Name|Description|Type|Required|
+|----|-----------|----|:--:|
+|items|Array of products to purchase|Array|*|
+|items.productId|Product related with the item|String|*|
+|items.quantity|number of products|Integer|*|
+|items.price|Price of the pruduct during the purchase|Object|*|
+|items.price.currency|Currency code for the price (ISO code)|String|*|
+|items.price.amount|The amount of the price|Float|*|
+|items.productPaymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.productPaymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|400|bad_request|Order request bad formed|
-|403  |fobidden|If the access_token is not associated with any user|
+|422|invalid_entity|Order object is mal formed|
+|401  |unauthorized|If the access_token is not associated with any user|
 
 + Request (application/json)
     + Headers
@@ -141,16 +336,14 @@ A single Order object. Each user's order id is the same that the user's id. It i
 
     + Body
     
-            {"state":"PREPARED|UPDATED", "items": [{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}, {"productId":"productId2", "amount" : 2, "price": {"amount":20, "currency":"EUR"}}]}
-    
+            {"items": [{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}, {"productId":"productId2", "amount" : 2, "price": {"amount":20, "currency":"EUR"}, {"productId":"productId3", "amount" : 1, "price": {"amount":10, "currency":"EUR"} ,"productPaymentPlan": {"duration":"P1Y","period":"P1M","upgradeable":"false"}}]}
 + Response 204
 
 ### To empty a Order [DELETE]
 + Request
     + Headers
 
-            Authorization: Bearer {token}   
-            Content-Length: 0
+            Authorization: Bearer {token}
 
 + Response 204
 
@@ -158,31 +351,81 @@ A single Order object. Each user's order id is the same that the user's id. It i
 Checks if an order has all its prices up to date, otherwise, updates the order. Returns the order.
 
 ### Prepare order [POST]
+
+###Request Fields (body)###
+|Name|Description|Type|
+|------|-----|-----------|
+|couponIds|List of coupons to apply to this order|List<String>|
+
+###Response Fields###
+|Name|Description|Type|
+|------|-----|-----------|
+|id|Identifier of the order (the same as the userId)|String|
+|items|Array of products to purchase|Array|*|
+|items.productId|Product related with the item|String|*|
+|items.productName|Product name related with the item|String|*|
+|items.quantity|Amount of the product in the purchase|Integer|
+|items.price|Price of the pruduct during the purchase|Object|
+|items.price.currency|Currency code for the price (ISO code)|String|
+|items.price.amount|The amount of the price|Float|
+|items.productPaymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.productPaymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.discount|Array of discount|Array|
+|items.discount.couponCode|code coupon|String|
+|items.discount.description|type of discount|String|
+|items.discount.cash.amount|Amount to discount|String|
+|items.discount.cash.currency|currency code for the price (ISO code)|String||
+|items.discount.percentage|percentage to discount|Double||
+|total|Amount to paid|CurencyAmount||
+|total.currency|Currency code for the price (ISO code)|String|
+|total.amount|The amount of the price|Float|
+|discount|type of discount|CashDiscount|
+|discount.couponCode|code of coupon discount|String|
+|discount.description|type of discount|String|
+|discount.cash|monetary discount|CurencyAmount|
+|discount.cash.currency|Currency code for the discount (ISO code)|String|
+|discount.cash.amount|discount amount|Float|
+|state|String code of the state (OPEN, PREPARED)|String|
+|updated|True if any items price has changed after being added it to the order|Boolean|
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
 |404  |not_found|Order is empty|
-
+|412  |precondition_failed|If the coupon campaign validation failed|
+|400  |bad_request|any item is not correct|
+|401  |unauthorized|If the access_token is not associated with any user|
+ 
 + Request
     + Headers
 
-            Authorization : Bearer {token}                
+            Authorization : Bearer {token}
+        
+    + Body
+        
+            { "couponIds": [ "ABC123" ] }
     
 + Response 200 (application/json)
 
-        {"state":"PREPARED|UPDATED", "items": [{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}, {"productId":"productId2", "amount" : 2, "price": {"amount":20, "currency":"EUR"}}]}
+        {"state":"PREPARED|OPEN", "items": [{"productId":"productId1", "amount" : 1, "price": {"amount":10, "currency":"EUR"}}, {"productId":"productId2", "amount" : 2, "price": {"amount":20, "currency":"EUR"}}, {"productId":"productId3", "amount" : 1, "price": {"amount":10, "currency":"EUR"} ,"productPaymentPlan": {"duration":"P1Y","period":"P1M","upgradeable":"false"}}]}
 
 ## Checkout order [/v1.0/order/{id}/checkout]
 Checkout an order and generate a purchase asyncronously. Returns in Location header a link to the new purchase.
 
 ### Checkout order [POST]
+
+###Request Fields###
+|Name|Description|Type|
+|------|-----|-----------|
+|paymentMethodsIds|Array of the payment methods ids|Array|*|
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
 |400|bad_request|Not payment methods selected|
 |404  |not_found|Order is empty|
-|403  |fobidden|If the access_token is not associated with any user|
-|423  |precondition_failed|If the order state is not PREPARED|
+|401  |unauthorized|If the access_token is not associated with any user|
+|412  |precondition_failed|If the order state is not PREPARED|
 
 + Request (application/json)
     + Headers
@@ -202,7 +445,79 @@ Checkout an order and generate a purchase asyncronously. Returns in Location hea
             Location: http://ec.int.bqreaders.com/v1.0/purchase/{newId}
 
 # Group Purchase
-API for view user purchase history
+API for purchase operations
+
+## Get a purchase [/v1.0/purchase/{id}]
+Get a purchase detail
+
+### Retrieve a purchase [GET]
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id  |Purchase identifier|String|
+|userId|User who made the purchase|String|
+|items|Array with the items of the purchase|Array|
+|items.productId|Product related with the item|String|
+|items.productName|Product name related with the item|String|
+|items.amount|Amount of the product in the purchase|Integer|
+|items.price|Price of the pruduct during the purchase|Object|
+|items.price.currency|Currency code for the price (ISO code)|String|
+|items.price.amount|The amount of the price|Float|
+|items.productPaymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.productPaymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.discount|Array of discount|Array|
+|items.discount.couponCode|code coupon|String|
+|items.discount.description|type of discount|String|
+|items.discount.cash.amount|Amount to discount|String|
+|items.discount.cash.currency|currency code for the price (ISO code)|String||
+|items.discount.percentage|percentage to discount|Double|
+|total|Amount to paid|CurencyAmount|
+|total.currency|Currency code for the price (ISO code)|String|
+|total.amount|The amount of the price|Float|
+|discount|type of discount|CashDiscount|
+|discount.couponCode|code of coupon discount|String|
+|discount.description|type of discount|String|
+|discount.cash|monetary discount|CurencyAmount|
+|discount.cash.currency|Currency code for the discount (ISO code)|String|
+|discount.cash.amount|discount amount|Float|
+|state|Current state of the purchase|Object|
+|state.state|String code of the state (COMPLETE, FAILED, IN_PROCESS, IN_PAYMENT, CANCELLED)|String|
+|state.message|Message of the state|String|
+|payments|Array of payment ids asociated to the purchase|Array|
+
+The states of the purchase are:
+
+|State|Description|
+|----|-----------|
+|COMPLETE|The purchase and the payment finish succesfully.|
+|FAILED|There was a problem with de payment and the purchase failed.|
+|IN_PROCESS|The purchase is accepted and is in progress in Silkroad. Eventually, Silkroad process this purchase and starts the comunication with Adyen to pay.|
+|CANCELLED|The purchase has been cancelled before the payment has started.|
+|IN_PAYMENT|The comunication with Adyend has begun and the payment is in progress.|
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}    
+            
++ Response 200 (application/json)
+
+        {
+            "id":"53591996ccf2e6bc0bac92f6",
+            "userId":"53de2b27d9f24ef791a06ce04fe78eac",
+            "items":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}],
+            "state":{"state":"COMPLETED","message":"Purchase completed"},
+            "discounts":[],
+            "payments":[
+                "paymentId1", "paymentId2"
+            ]
+        }
 
 ## Get purchases for the logged user [/v1.0/purchase]
 Get purchases paginated
@@ -213,12 +528,59 @@ Get purchases paginated
 |Name|Description|Type|Default|Required
 |----|-----------|----|:-----:|:------:|
 |api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
 |api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id  |Purchase identifier|String|
+|userId|User who made the purchase|String|
+|items|Array with the items of the purchase|Array|
+|items.productId|Product related with the item|String|
+|items.productName|Product name related with the item|String|
+|items.amount|Amount of the product in the purchase|Integer|
+|items.price|Price of the pruduct during the purchase|Object|
+|items.price.currency|Currency code for the price (ISO code)|String|
+|items.price.amount|The amount of the price|Float|
+|items.productPaymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.productPaymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.discount|Array of discount|Array|
+|items.discount.couponCode|code coupon|String|
+|items.discount.description|type of discount|String|
+|items.discount.cash.amount|Amount to discount|String|
+|items.discount.cash.currency|currency code for the price (ISO code)|String||
+|items.discount.percentage|percentage to discount|Double|
+|total|Amount to paid|CurencyAmount|
+|total.currency|Currency code for the price (ISO code)|String|
+|total.amount|The amount of the price|Float|
+|discount|type of discount|CashDiscount|
+|discount.couponCode|code of coupon discount|String|
+|discount.description|type of discount|String|
+|discount.cash|monetary discount|CurencyAmount|
+|discount.cash.currency|Currency code for the discount (ISO code)|String|
+|discount.cash.amount|discount amount|Float|
+|state|Current state of the purchase|Object|
+|state.state|String code of the state (COMPLETE, FAILED, IN_PROCESS, IN_PAYMENT, CANCELLED)|String|
+|state.message|Message of the state|String|
+|payments|Array of payment ids asociated to the purchase|Array|
+
+
+The states of the purchase are:
+
+|State|Description|
+|----|-----------|
+|COMPLETED|The purchase and the payment finish succesfully.|
+|FAILED|There was a problem with de payment and the purchase failed.|
+|IN_PROCESS|The purchase is accepted and is in progress in Silkroad. Eventually, Silkroad process this purchase and starts the comunication with Adyen to pay.|
+|CANCELLED|The purchase has been cancelled before the payment has started.|
+|IN_PAYMENT|The comunication with Adyend has begun and the payment is in progress.|
 
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|403  |fobidden|If the access_token is not associated with any user|
+|401  |unauthorized|If the access_token is not associated with any user|
 
 + Request
     + Headers
@@ -227,7 +589,150 @@ Get purchases paginated
             
 + Response 200 (application/json)
 
-        [{"id": "purchase1"}, {"id": "purchase2"}]
+        [
+            "id":"53591996ccf2e6bc0bac92f6",
+            "userId":"53de2b27d9f24ef791a06ce04fe78eac",
+            "items":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}],
+            "state":{"state":"COMPLETED","message":"Purchase completed"},
+            "discounts":[],
+            "payments":[
+                "paymentId1", "paymentId2"
+            ]
+        ]
+
+# Group Payment
+API for payment operations
+
+## Get payments of logged user [/v1.0/payment]
+Get payments paginated
+
+### Retrieve payments [GET]
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id  |Payment identifier|String|
+|userId|User who made the payment|String|
+|items|Array with the items of the payment|Array|
+|items.productId|Product Id related with the item|String|
+|items.productName|Product name related with the item|String|
+|items.amount|Amount of the product in the payment|Integer|
+|items.price|Price of the pruduct during the payment|Object|
+|items.price.currency|Currency code for the price (ISO code)|String|
+|items.price.amount|The amount of the price|Float|
+|items.productPaymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.productPaymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|paymentMethod|Payment method the payment was paid with|Object|
+|amount|Amount that was paid in the payment|Object|
+|amount.currency|Currency code of the payment (ISO code)|String|
+|amount.amount|The amount of the payment|Float|
+|transactionResult|Result of the transaction in the payment|Object|
+|transactionResult.resultCode|Result code of the transaction (one of Authorised, Refused, Error, Received)|String|
+|transactionResult.transactionReference|Reference transaction number (ie pspReference in Adyen)|String|
+|transactionResult.authCode|The authorisation code if the payment was successful. Blank otherwise|String|
+|transactionResult.refusalReason|Refusal reason, populated if the payment was refused|String|
+|date|Date when the payment was done|timestamp|
+|type|The type of the payment, if is created by a purchase or by a recurring paymeny (PURCHASE or RECURRING)|String|
+|purchaseId|Purchase associated to the payment (if type is PURCHASE)|String|
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}    
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "id":"53591996ccf2e6bc0bac92f6",
+                "userId":"53de2b27d9f24ef791a06ce04fe78eac",
+                "items":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}],
+                "paymentMethod": {"id":"53591995ccf2e6bc0bac92f4","userId":"53de2b27d9f24ef791a06ce04fe78eac","type":"BANK_CARD","name":"test","reference":"8413983481820043","holderName":"Test user","cardNumber":"1111","onService":true},
+                "amount":{"currency":"EUR","amount":20.0},
+                "transactionResult":{"resultCode":"Authorised","transactionReference":"7913983481826567","authCode":"21287"},
+                "date": "2014-05-27T13:37:57.641Z", 
+                "type": "PURCHASE"
+            }
+        ]
+
+## Get all payments [/v1.0/payment/all]
+Get payments paginated, this endpoint is only for admins
+
+### Retrieve the payments [GET]
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id  |Payment identifier|String|
+|userId|User who made the payment|String|
+|items|Array with the items of the payment|Array|
+|items.productId|Product Id related with the item|String|
+|items.productName|Product name related with the item|String|
+|items.amount|Amount of the product in the payment|Integer|
+|items.price|Price of the pruduct during the payment|Object|
+|items.price.currency|Currency code for the price (ISO code)|String|
+|items.price.amount|The amount of the price|Float|
+|items.productPaymentPlan.duration|Define the period of service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|items.productPaymentPlan.period|The data to hire the service has a validity in ISO8601 period format (e.g. P1y2m3d)|String||
+|paymentMethod|Payment method the payment was paid with|Object|
+|amount|Amount that was paid in the payment|Object|
+|amount.currency|Currency code of the payment (ISO code)|String|
+|amount.amount|The amount of the payment|Float|
+|transactionResult|Result of the transaction in the payment|Object|
+|transactionResult.resultCode|Result code of the transaction (one of Authorised, Refused, Error, Received)|String|
+|transactionResult.transactionReference|Reference transaction number (ie pspReference in Adyen)|String|
+|transactionResult.authCode|The authorisation code if the payment was successful. Blank otherwise|String|
+|transactionResult.refusalReason|Refusal reason, populated if the payment was refused|String|
+|date|Date when the payment was done|Iso Date|
+|type|The type of the payment, if is created by a purchase or by a recurring paymeny  (PURCHASE or RECURRING)|String|
+|purchaseId|Purchase associated to the payment (if type is PURCHASE)|String|
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}    
+            
++ Response 200 (application/json)
+
+        [
+            {
+                "id":"53591996ccf2e6bc0bac92f6",
+                "userId":"53de2b27d9f24ef791a06ce04fe78eac",
+                "items":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}],
+                "paymentMethod": {"id":"53591995ccf2e6bc0bac92f4","userId":"53de2b27d9f24ef791a06ce04fe78eac","type":"BANK_CARD","name":"test","reference":"8413983481820043","holderName":"Test user","cardNumber":"1111","onService":true},
+                "amount":{"currency":"EUR","amount":20.0},
+                "transactionResult":{"resultCode":"Authorised","transactionReference":"7913983481826567","authCode":"21287"},
+                "date": "2014-05-27T13:37:57.641Z"
+            }
+        ]
 
 # Group Payment Method
 Add, get and delete payment methods.
@@ -238,10 +743,25 @@ Add a payment method for the logged user an get his collections.
 ### Get payment methods [GET]
 Get the payment method registered for a user.
 
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id|Payment method identifier|String|
+|userId|User identifier related with de payment method|String|
+|type|Type of the payment method [BANK_CARD, GIFT_CARD (not allowed yet)]|String|
+|name|String that identifies the payment method friendly|String|
+|reference|Identifier in adyen service|String|
+|cardNumber|Last four characters of the card|String|
+|holderName|The holder name of the payment method|String|
+|onService|If the payment method is on service|Boolean|
+|credit|Credit (only for GIFT_CARDs)|Object|
+|credit.currency|Currency code for the price (ISO code) (only for GIFT_CARDs)|String|
+|credit.amount|The amount of the credit (only for GIFT_CARDs)|Float|
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|403  |fobidden|If the access_token is not associated with any user|
+|401  |unauthorized|If the access_token is not associated with any user|
 
 + Request
     + Headers
@@ -255,10 +775,12 @@ Get the payment method registered for a user.
             "id":"paymentMethodId1", 
             "userId":"userId", 
             "type":"BANK_CARD", 
-            "name", "myCard", 
+            "name": "myCard", 
             "reference":"123123123123", 
-            "holderName":"Pepito Gimenez", 
             "cardNumber":"1213", 
+            "expiryMonth":"06",
+            "expiryYear":"2016",
+            "holderName": "Pepe Perez",
             "credit":null,
             "onService":false
         },
@@ -268,8 +790,10 @@ Get the payment method registered for a user.
             "type":"GIFT_CARD", 
             "name":"myGiftCard",
             "reference":"333442211", 
-            "holderName":"Pepito Gimenez", 
             "cardNumber":null, 
+            "expiryMonth":"06",
+            "expiryYear":"2016",
+            "holderName": "Pepe Perez",
             "credit":{"currency":"EUR", "amount":10},
             "onService":false
         },
@@ -279,12 +803,19 @@ Get the payment method registered for a user.
 ### Add payment method [POST]
 Add a new payment method for the logged user
 
+###Request Fields###
+|Name|Description|Type|Required|
+|----|-----------|----|:--:|
+|data|The card data encrypted (see https://github.com/adyenpayments/client-side-encryption)|String|*|
+|name|Friendly name for the payment method|String||
+
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|403  |fobidden|If the access_token is not associated with any user|
+|401  |unauthorized|If the access_token is not associated with any user|
 |403  |adyen_connection_refused|Adyen refuse the new payment method|
-|500  |adyen_connection_error|Error when connecting with adyen|
+|400  |adyen_connection_error|Error when connecting with adyen, like invalid payment method|
+|409  |payment_method_conflict|Error when connecting with adyen|
 
 + Request (application/json)
     + Headers
@@ -301,10 +832,26 @@ Add a new payment method for the logged user
 
 + Response 201
 
-## Single payment method get and delete [/v1.0/paymentmethod/{id}]
+## Single payment method get update and delete [/v1.0/paymentmethod/{id}]
 
 ### Get a single payment method [GET]
 Get details of a single payment method by its id
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id|Payment method identifier|String|
+|userId|User identifier related with de payment method|String|
+|type|Type of the payment method [BANK_CARD, GIFT_CARD (not allowed yet)]|String|
+|name|String that identifies the payment method friendly|String|
+|reference|Identifier in adyen service|String|
+|cardNumber|Last four characters of the card|String|
+|holderName|The holder name of the payment method|String|
+|onService|If the payment method is on service|Boolean|
+|credit|Credit (only for GIFT_CARDs)|Object|
+|credit.currency|Currency code for the price (ISO code) (only for GIFT_CARDs)|String|
+|credit.amount|The amount of the credit (only for GIFT_CARDs)|Float|
+
 
 ###Errors###
 |Status|Error|Description|
@@ -325,7 +872,6 @@ Get details of a single payment method by its id
             "type":"BANK_CARD", 
             "name", "myCard", 
             "reference":"123123123123", 
-            "holderName":"Pepito Gimenez", 
             "cardNumber":"1213", 
             "credit":null,
             "onService":false
@@ -336,9 +882,9 @@ Get details of a single payment method by its id
 ###Errors###
 |Status|Error|Description|
 |------|-----|-----------|
-|403  |fobidden|If the access_token is not associated with any user|
+|401  |unauthorized|If the access_token is not associated with any user|
 |423  |payment_method_blocked|When payment method is on service with a subscription or in  purchase in progress|
-|500  |adyen_connection_error|Error when connecting with adyen|
+|400  |adyen_connection_error|Error when connecting with adyen|
 
 + Request
     + Headers
@@ -348,5 +894,238 @@ Get details of a single payment method by its id
 
 + Response 204
 
+# Group Payment Plan
+Operations with payment plans. A payment plan is what is created when the user purchases a service within ec. All data related to the service is included in a payment plan, e.g. Payment method, period, start date, etc.
+
+## Payment plans [/v1.0/paymentplan]
+Endpoint for getting the logged user payment plans
+
+### Get payment plans [GET]
+Get the payment plans of the logged user.
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id|Payment plan identifier|String|
+|userId|Identifier of the user related to the plan|String|
+|paymentMethodId|Identifier of the payment method related to the plan|String|
+|period|Defines the cadence for doing the payments in ISO8601 period format (e.g. P0y1m0d)|String|
+|start|Date when the plan starts|Date|
+|end|Date when the plan ends|Date|
+|item|Array with the items of the payment plan|Array|
+|item.productId|Product Id related with the item|String|
+|item.productName|Product name related with the item|String|
+|item.amount|Amount of the product in the payment|Integer|
+|item.price|Price of the pruduct during the payment|Object|
+|item.price.currency|Currency code for the price (ISO code)|String|
+|item.price.amount|The amount of the price|Float|
 
 
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}   
+
++ Response 200 (application/json)
+
+        [
+        {
+            "id":"paymentPlanId1", 
+            "userId":"userId", 
+            "paymentMethodId":"paymentMethodId", 
+            "period":"P0y1m0d", 
+            "start", "2014-05-27T13:37:57.641Z", 
+            "end":"", 
+            "item":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}]
+        },
+        {
+            "id":"paymentPlanId2", 
+            "userId":"userId", 
+            "paymentMethodId":"paymentMethodId2", 
+            "period":"P0y1m0d", 
+            "start", "2014-05-27T13:37:57.641Z", 
+            "end":"2015-05-27T13:37:57.641Z", 
+            "item":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}]
+        },
+        ... 
+        ]
+
+
+## Single payment plan get and delete [/v1.0/paymentplan/{id}]
+
+### Get a single payment plan [GET]
+Get details of a single payment plan by its id
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id|Payment plan identifier|String|
+|userId|Identifier of the user related to the plan|String|
+|paymentMethodId|Identifier of the payment method related to the plan|String|
+|period|Defines the cadence for doing the payments in ISO8601 period format (e.g. P0y1m0d)|String|
+|start|Date when the plan starts|Date|
+|end|Date when the plan ends|Date|
+|item|Array with the items of the payment plan|Array|
+|item.productId|Product Id related with the item|String|
+|item.productName|Product name related with the item|String|
+|item.amount|Amount of the product in the payment|Integer|
+|item.price|Price of the pruduct during the payment|Object|
+|item.price.currency|Currency code for the price (ISO code)|String|
+|item.price.amount|The amount of the price|Float|
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+|404  |not_found|Payment plan not found|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}  
+    
+
++ Response 200 (application/json)
+
+        {
+            "id":"paymentPlanId2", 
+            "userId":"userId", 
+            "paymentMethodId":"paymentMethodId2", 
+            "period":"P0y1m0d", 
+            "start", "2014-05-27T13:37:57.641Z", 
+            "end":"2015-05-27T13:37:57.641Z", 
+            "item":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}]
+        }
+        
+### Deletes payment plan [DELETE]
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+|404  |not_found|Payment plan not found|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}  
+    
+
++ Response 204
+
+## Rescue a payment plan  [/v1.0/paymentplan/{id}/rescue]
+### Rescue a payment plan [PUT]
+Change the payment plan status from terminated to open (reactivated the payment plan)
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+|404  |not_found|Payment plan or payment method not found|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}    
+    
++ Response 204
+
+## Update payment plan's payment method  [/v1.0/paymentplan/{id}/paymentmethod]
+### Update payment method [PUT]
+Change the payment method of a playment plan
+
+###Request Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|paymentMethodId|Identifier of the payment method to use with the plan|String|
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+|404  |not_found|Payment plan or payment method not found|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}
+    
+    + Body
+    
+            {
+                "paymentMethodId" : "1234"
+            }
+
++ Response 204
+
+## Gets all payment plans [/v1.0/paymentplan/all]
+Gets payment plans paginated, this endpoint is only for admins
+
+### Retrieve the payments [GET]
+
+###Parameters###
+|Name|Description|Type|Default|Required
+|----|-----------|----|:-----:|:------:|
+|api:pageSize|Number of result returned in the page|Integer > 0|10||
+|api:query|A search query expressed in silkroad query language (documentaton [here](http://jira.mundoreader.com/confluence/display/SILKROAD/Resources+API+Query+language)).|String|||
+|api:page|The page to be returned. Pages are zero-indexed|Integer >= 0|0||
+|api:sort|Results orders. JSON with field to order and direction, asc or desc (e.g. {"name":"asc"})|String|||
+
+###Response Fields###
+|Name|Description|Type|
+|----|-----------|----|
+|id|Payment plan identifier|String|
+|userId|Identifier of the user related to the plan|String|
+|paymentMethodId|Identifier of the payment method related to the plan|String|
+|period|Defines the cadence for doing the payments in ISO8601 period format (e.g. P0y1m0d)|String|
+|start|Date when the plan starts|Date|
+|end|Date when the plan ends|Date|
+|item|Array with the items of the payment plan|Array|
+|item.productId|Product Id related with the item|String|
+|item.productName|Product name related with the item|String|
+|item.amount|Amount of the product in the payment|Integer|
+|item.price|Price of the pruduct during the payment|Object|
+|item.price.currency|Currency code for the price (ISO code)|String|
+|item.price.amount|The amount of the price|Float|
+
+
+###Errors###
+|Status|Error|Description|
+|------|-----|-----------|
+|401  |unauthorized|If the access_token is not associated with any user|
+
++ Request
+    + Headers
+
+            Authorization : Bearer {token}    
+            
++ Response 200 (application/json)
+
+        [
+        {
+            "id":"paymentPlanId1", 
+            "userId":"userId", 
+            "paymentMethodId":"paymentMethodId", 
+            "period":"P0y1m0d", 
+            "start", "2014-05-27T13:37:57.641Z", 
+            "end":"", 
+            "item":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}]
+        },
+        {
+            "id":"paymentPlanId2", 
+            "userId":"userId", 
+            "paymentMethodId":"paymentMethodId2", 
+            "period":"P0y1m0d", 
+            "start", "2014-05-27T13:37:57.641Z", 
+            "end":"2015-05-27T13:37:57.641Z", 
+            "item":[{"productId":"53591996ccf2e6bc0bac92f5","amount":1,"price":{"currency":"EUR","amount":20.0}}]
+        },
+        ... 
+        ]
