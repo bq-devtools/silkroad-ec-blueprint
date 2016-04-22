@@ -848,6 +848,8 @@ Get details of a single payment method by its id
 |name|String that identifies the payment method friendly|String|
 |reference|Identifier in adyen service|String|
 |cardNumber|Last four characters of the card|String|
+|expiryMonth|The month when the card expires|String|
+|expiryYear|The year when the card expires|String|
 |holderName|The holder name of the payment method|String|
 |onService|If the payment method is on service|Boolean|
 |credit|Credit (only for GIFT_CARDs)|Object|
@@ -875,6 +877,9 @@ Get details of a single payment method by its id
             "name", "myCard", 
             "reference":"123123123123", 
             "cardNumber":"1213", 
+            "expiryMonth":"06",
+            "expiryYear":"2016",
+            "holderName": "Pepe Perez",
             "credit":null,
             "onService":false
         }
